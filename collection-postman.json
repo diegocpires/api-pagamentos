@@ -1,0 +1,173 @@
+{
+	"info": {
+		"_postman_id": "4ddc527f-560e-4b3a-880f-35e59c8aa898",
+		"name": "API Pagamentos",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Create Customer",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Diego Pires\",\n    \"email\": \"diegocpires21@gmail.com\",\n    \"type\": \"1\",\n    \"document\": \"3046815085412\",\n    \"balance\": 0\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://api.pagamentos/customers",
+					"protocol": "http",
+					"host": [
+						"api",
+						"pagamentos"
+					],
+					"path": [
+						"customers"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Customer",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Diego Pires Teste 1\",\n    \"email\": \"diegocpires@gmail.com\",\n    \"type\": \"1\",\n    \"document\": \"30468150854\",\n    \"balance\": 345\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://api.pagamentos/customers/11",
+					"protocol": "http",
+					"host": [
+						"api",
+						"pagamentos"
+					],
+					"path": [
+						"customers",
+						"11"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Customers",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://api.pagamentos/customers?page=1",
+					"protocol": "http",
+					"host": [
+						"api",
+						"pagamentos"
+					],
+					"path": [
+						"customers"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Customer",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://api.pagamentos/customers/13",
+					"protocol": "http",
+					"host": [
+						"api",
+						"pagamentos"
+					],
+					"path": [
+						"customers",
+						"13"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Transaction",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"value\" : 1.00,\n    \"payer\" : 5,\n    \"payee\" : 3\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://api.pagamentos/transaction",
+					"protocol": "http",
+					"host": [
+						"api",
+						"pagamentos"
+					],
+					"path": [
+						"transaction"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
