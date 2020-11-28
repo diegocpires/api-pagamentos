@@ -1,0 +1,45 @@
+name: Test-Suite
+
+on:
+  pull_request:
+    branches: [ master ]
+
+jobs:
+
+  code-quality:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install Dependencies
+        run: cd src &&composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+
+      - name: Execute PHPCS
+        run: cd src && vendor/bin/phpcs --standard=PSR12 app/
+
+      - name: Execute PHPMD
+        run: cd src && vendor/bin/phpmd app ansi ./phpmd-ruleset.xml
+
+      - name: Execute PHPStan
+        run: cd src && vendor/bin/phpstan analyse app --level 8
+
+  laravel-tests:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Copy .env
+      run: cd src && php -r "file_exists('.env') || copy('.env.example', '.env');"
+    - name: Install Dependencies
+      run: cd src &&composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+    - name: Create Database
+      run: |
+        cd src
+        mkdir -p database
+        touch database/database.sqlite
+    - name: Execute tests (Unit and Feature tests) via PHPUnit
+      env:
+        DB_CONNECTION: sqlite
+        DB_DATABASE: database/database.sqlite
+      run: cd src && vendor/bin/phpunit --coverage-text
+

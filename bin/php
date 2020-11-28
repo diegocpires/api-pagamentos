@@ -1,0 +1,19 @@
+#!/bin/bash
+USER=whoami | awk '{print $1}'
+
+if [ $USER = "root" ]; then
+    echo "Não utilize sudo";
+    exit
+fi
+
+ARG=$1
+
+export USERID=${UID}
+export GROUPID=${GID}
+
+if ! test $ARG; then
+   docker-compose exec php sh
+   exit
+fi
+
+docker-compose exec php php $1

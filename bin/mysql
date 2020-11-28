@@ -1,0 +1,29 @@
+#!/bin/bash
+USER=whoami | awk '{print $1}'
+
+if [ $USER = "root" ]; then
+    echo "Não utilize sudo";
+    exit
+fi
+
+ARG=$1
+
+export USERID=${UID}
+export GROUPID=${GID}
+
+if ! test $ARG; then
+   docker-compose exec mysql mysql -uroot -p123123
+   exit
+fi
+
+if [ $ARG = "bash" ]; then
+    docker-compose exec mysql bash
+    exit;
+fi
+
+if [ $ARG = "restore" ]; then
+    docker-compose exec mysql bash -c "mysql -uroot -p123123 < /dump/create_schema.sql"
+    docker-compose exec mysql bash -c "mysql -uroot -p123123 < /dump/magento2.sql"
+    exit;
+fi
+
