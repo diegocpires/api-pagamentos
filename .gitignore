@@ -1,0 +1,4 @@
+.idea/
+src/html-coverage
+src/coverage
+.docker/percona_data
