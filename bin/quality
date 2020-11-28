@@ -1,0 +1,12 @@
+#!/bin/bash
+USER=whoami | awk '{print $1}'
+
+if [ $USER = "root" ]; then
+    echo "Não utilize sudo";
+    exit
+fi
+
+export USERID=${UID}
+export GROUPID=${GID}
+
+docker-compose exec php bash -c "vendor/bin/phpcs --standard=PSR12 app/ && vendor/bin/phpmd app ansi ./phpmd-ruleset.xml && vendor/bin/phpstan analyse app --level 8 && vendor/bin/phpunit --coverage-text";

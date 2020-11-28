@@ -1,0 +1,27 @@
+#!/bin/bash
+USER=whoami | awk '{print $1}'
+
+if [ $USER = "root" ]; then
+    echo "Não utilize sudo";
+    exit
+fi
+
+export USERID=${UID}
+export GROUPID=${GID}
+
+echo -e "\nConfigurando permissão de diretórios\n";
+sudo chmod 777 -R .docker/percona_data;
+
+echo -e "\nParando serviços docker\n";
+docker-compose stop;
+
+echo -e "\nBuild do docker\n";
+docker-compose build;
+
+echo -e "\nIniciando serviços docker\n";
+docker-compose up -d; docker-compose ps;
+
+docker-compose exec php bash -c "composer install && cp .env.example .env && php artisan migrate";
+
+echo -e "\nAdiciona linha no /etc/hosts\n";
+echo '127.0.0.1 api.pagamentos' | sudo tee -a /etc/hosts

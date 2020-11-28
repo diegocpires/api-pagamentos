@@ -1,0 +1,44 @@
+#!/bin/bash
+ARG=$1
+
+USER=whoami | awk '{print $1}'
+
+if [ $USER = "root" ]; then
+    echo "Não utilize sudo";
+    exit
+fi
+
+export USERID=${UID}
+export GROUPID=${GID}
+
+if ! test $ARG; then
+   sudo chmod 777 -R /var/run/docker.sock; docker-compose stop; docker-compose up -d; docker-compose ps;
+   exit
+fi
+
+
+if [ $ARG = "start" ]; then
+  docker-compose up -d; docker-compose ps;
+  exit;
+fi
+
+if [ $ARG = "stop" ]; then
+    docker-compose stop;
+    exit;
+fi
+
+if [ $ARG = "restart" ]; then
+    docker-compose stop; docker-compose up -d; docker-compose ps;
+    exit;
+fi
+
+if [ $ARG = "status" ]; then
+    docker-compose ps;
+    exit;
+fi
+
+if [ $ARG = "build" ]; then
+    bin/dev stop; docker-compose build;
+    bin/dev start;
+    exit;
+fi
