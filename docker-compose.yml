@@ -1,0 +1,57 @@
+version: "2.2"
+
+services:
+
+  nginx:
+    image: nginx
+    tty: true
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./src:/var/www/html
+      - ./.docker/config/nginx/api-pagamentos.conf:/etc/nginx/conf.d/api-pagamentos.conf
+    networks:
+      net_pagamentos:
+        aliases:
+          - api.pagamentos
+          - dash.customer
+          - dash.store
+
+  mysql:
+    image: percona
+    volumes:
+      - ./.docker/percona_data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: 123123
+      MYSQL_USER: usr_pagamentos
+      MYSQL_PASSWORD: 123123
+      MYSQL_DATABASE: api
+    ports:
+      - "3306:3306"
+    networks:
+      - net_pagamentos
+        
+  php:
+    build: 
+      context: ./.docker/build/php
+      network: host
+    environment:
+      COMPOSER_HOME: /usr/local/.composer
+    volumes:
+      - ./src:/var/www/html
+      - ./.docker/config/php/configs.ini:/usr/local/etc/php/conf.d/configs.ini
+    user: "${USERID}:${GROUPID}"
+    networks:
+      - net_pagamentos
+
+  rabbitmq:
+    image: rabbitmq:management
+    ports:
+      - "15672:15672"
+    networks:
+      - net_pagamentos
+
+networks:
+  net_pagamentos:
+    driver: bridge
